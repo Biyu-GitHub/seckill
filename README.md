@@ -1,2 +1,1 @@
-# seckill
-Java高并发秒杀API
+# Java高并发秒杀API

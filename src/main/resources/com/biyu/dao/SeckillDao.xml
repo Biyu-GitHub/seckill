@@ -21,11 +21,11 @@
 
     <select id="queryById" parameterType="long" resultType="Seckill">
         select
-            seckill_id, name, number, start_time, emd_time, create_time
+            seckill_id, name, number, start_time, end_time, create_time
         from
             seckill
         where
-            seckill_id = #{seckillId};
+            seckill_id = #{seckillId}
     </select>
 
     <select id="queryAll" resultType="Seckill">

@@ -58,9 +58,9 @@
         </dependency>
         <!--2.2 数据库连接池-->
         <dependency>
-            <groupId>c3p0</groupId>
+            <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
+            <version>0.9.5.4</version>
         </dependency>
         <!--2.3 DAO框架：Mybatis依赖-->
         <dependency>

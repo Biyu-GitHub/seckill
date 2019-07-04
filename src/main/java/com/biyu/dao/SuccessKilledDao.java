@@ -1,6 +1,7 @@
 package com.biyu.dao;
 
 import com.biyu.entity.SuccessKilled;
+import org.apache.ibatis.annotations.Param;
 
 public interface SuccessKilledDao {
     /**
@@ -10,7 +11,7 @@ public interface SuccessKilledDao {
      * @param userPhone 购买用户的手机号码
      * @return 成功插入就返回1, 否则就返回0
      */
-    int insertSuccessKilled(long seckillId, long userPhone);
+    int insertSuccessKilled(@Param("seckillId") long seckillId, @Param("userPhone") long userPhone);
 
     /**
      * 根据秒杀商品的ID查询SuccessKilled的明细信息.
@@ -19,5 +20,5 @@ public interface SuccessKilledDao {
      * @param userPhone 购买用户的手机号码
      * @return 秒杀商品的明细信息
      */
-    SuccessKilled queryByIdWithSeckill(long seckillId, long userPhone);
+    SuccessKilled queryByIdWithSeckill(@Param("seckillId") long seckillId, @Param("userPhone") long userPhone);
 }

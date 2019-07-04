@@ -6,9 +6,9 @@
     <insert id="insertSuccessKilled">
         <!--使用ignore，让主键冲突时不报错，直接返回0-->
         insert ignore into
-            success_killed(seckill_id, user_phone)
+            success_killed(seckill_id, user_phone, state, create_time)
         values
-            (#{seckillId}, #{userPhone});
+            (#{seckillId}, #{userPhone}, 0, CURRENT_TIMESTAMP());
     </insert>
 
     <select id="queryByIdWithSeckill" resultType="SuccessKilled">
@@ -30,6 +30,8 @@
         on
             sk.seckill_id = s.seckill_id
         where
-            sk.seckill_id = #{seckillId};
+            sk.seckill_id = #{seckillId}
+        and
+            sk.user_phone = #{userPhone};
     </select>
 </mapper>

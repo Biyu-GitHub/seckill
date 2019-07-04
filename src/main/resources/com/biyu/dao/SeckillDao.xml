@@ -10,7 +10,7 @@
         set
             number = number - 1
         where
-            seckill_id = # {seckillId}
+            seckill_id = #{seckillId}
         and
             start_time <![CDATA[ <= ]]> #{killTime}
         and
@@ -30,12 +30,12 @@
 
     <select id="queryAll" resultType="Seckill">
         select
-            seckill_id, name, number, start_time, emd_time, create_time
+            seckill_id, name, number, start_time, end_time, create_time
         from
             seckill
         order by
             create_time desc
         limit
-            #{offet}, #{limit};
+            #{offset}, #{limit};
     </select>
 </mapper>

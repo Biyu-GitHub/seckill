@@ -36,7 +36,7 @@ public class SeckillController {
     }
 
     @RequestMapping(value = "/{seckillId}/detail", method = RequestMethod.GET)
-    public String detail(@PathVariable("seckillId") Long seckillId, @PathVariable("model") Model model) {
+    public String detail(@PathVariable("seckillId") Long seckillId, Model model) {
         if (seckillId == null)
             return "redirect:/seckill/list";
 
@@ -48,9 +48,9 @@ public class SeckillController {
         return "detail";
     }
 
-    @RequestMapping(value = "/{seckillId}/exposer", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/{seckillId}/exposer", method = RequestMethod.GET, produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public SeckillResult<Exposer> exposer(Long seckillId) {
+    public SeckillResult<Exposer> exposer(@PathVariable("seckillId") Long seckillId) {
         SeckillResult<Exposer> result;
 
         try {
@@ -63,41 +63,43 @@ public class SeckillController {
         return result;
     }
 
-    @RequestMapping(value = "/{seckillId}/{md5}/execution", method = RequestMethod.POST, produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/{seckillId}/{md5}/execution",
+            method = RequestMethod.POST,
+            produces = {"application/json;charset=UTF-8"})
     @ResponseBody
-    public SeckillResult<SeckillExecution> excute(@PathVariable("seckillId") Long seckillId,
-                                                  @PathVariable("md5") String md5,
-                                                  @CookieValue(value = "killPhone", required = false) Long phone) {
-
-        if (phone == null)
-            return new SeckillResult<SeckillExecution>(false, "用户未注册");
-
-        SeckillResult<SeckillExecution> result;
-        try {
-
-            SeckillExecution execution = seckillService.excuteSeckill(seckillId, phone, md5);
-            return new SeckillResult<>(true, execution);
-
-        } catch (RepeatKillException e) {
-
-            SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.REPEAT_KILL);
-            return new SeckillResult<>(false, execution);
-
-        } catch (SeckillCloseException e) {
-
-            SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.END);
-            return new SeckillResult<>(false, execution);
-
-        } catch (Exception e) {
-
-            logger.info(e.getMessage(), e);
-            SeckillExecution execution = new SeckillExecution(seckillId, SeckillStateEnum.INNER_ERROR);
-            return new SeckillResult<>(false, execution);
+    public SeckillResult<SeckillExecution> execute(@PathVariable("seckillId") Long seckillId,
+                                                   @PathVariable("md5") String md5,
+                                                   @CookieValue(value = "userPhone",required = false) Long userPhone)
+    {
+        if (userPhone==null)
+        {
+            return new SeckillResult<SeckillExecution>(false,"未注册");
         }
+        SeckillResult<SeckillExecution> result;
+
+        try {
+            SeckillExecution execution = seckillService.excuteSeckill(seckillId, userPhone, md5);
+            return new SeckillResult<SeckillExecution>(true, execution);
+        }catch (RepeatKillException e1)
+        {
+            SeckillExecution execution=new SeckillExecution(seckillId, SeckillStateEnum.REPEAT_KILL);
+            return new SeckillResult<SeckillExecution>(true,execution);
+        }catch (SeckillCloseException e2)
+        {
+            SeckillExecution execution=new SeckillExecution(seckillId, SeckillStateEnum.END);
+            return new SeckillResult<SeckillExecution>(true,execution);
+        }
+        catch (Exception e)
+        {
+            SeckillExecution execution=new SeckillExecution(seckillId, SeckillStateEnum.INNER_ERROR);
+            return new SeckillResult<SeckillExecution>(true,execution);
+        }
+
     }
 
 
     @RequestMapping(value = "/time/now", method = RequestMethod.GET)
+    @ResponseBody
     public SeckillResult<Long> time() {
         Date now = new Date();
         return new SeckillResult<>(true, now.getTime());
